@@ -1,6 +1,11 @@
 /* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'python:3.13.6-alpine3.22' } }
+    agent { 
+        docker { 
+            image 'python:3.13.6-alpine3.22'
+            args  '--user=0' 
+        } 
+    }
 
     parameters {
         string(name: 'COVERAGE_THRESHOLD', defaultValue: '90', description: 'Minimum code coverage percentage required to pass the test stage.')
