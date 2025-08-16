@@ -16,6 +16,7 @@ pipeline {
             steps {
                 sh 'pip install uv'
                 sh 'uv sync --group test'
+                sh 'chmod +x ./run_test.sh'
                 sh './run_test.sh ${COVERAGE_THRESHOLD}'
             }
             post {
