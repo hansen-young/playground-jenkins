@@ -25,5 +25,10 @@ pipeline {
                 }
             }
         }
+        stage('Alert') {
+            steps {
+                echo 'OK'
+            }
+        }
     }
 }
