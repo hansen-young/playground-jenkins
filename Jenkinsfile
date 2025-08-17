@@ -1,10 +1,33 @@
 /* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'python:3.13.6-alpine3.22' } }
+    agent { 
+        docker { 
+            image 'python:3.10.18-slim'
+            args  '--user=0' 
+        } 
+    }
+
+    parameters {
+        string(name: 'COVERAGE_THRESHOLD', defaultValue: '90', description: 'Minimum code coverage percentage required to pass the test stage.')
+    }
+
     stages {
-        stage('build') {
+        stage('Run Test') {
             steps {
-                sh 'python --version'
+                sh 'pip install uv'
+                sh 'uv sync --group test'
+                sh 'chmod +x ./run_test.sh'
+                sh '. .venv/bin/activate && ./run_test.sh ${COVERAGE_THRESHOLD}'
+            }
+            post {
+                failure {
+                    echo "Test stage failed."
+                }
+            }
+        }
+        stage('Alert') {
+            steps {
+                echo 'OK'
             }
         }
     }
